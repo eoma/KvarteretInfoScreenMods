@@ -1,0 +1,253 @@
+/*** Element structures ***/
+
+@font-face
+{
+  font-family: BebasNeue;
+  src: url('BebasNeue.otf');
+}
+
+.resepsjon {
+  font-family: BebasNeue;
+  background-color: #ececec;
+}
+
+.resepsjon,
+.resepsjon *
+{
+ -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.resepsjon .photoCarousel
+{
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.resepsjon .photoCarousel .photoElem
+{
+  position: absolute;
+  width: 100%;
+}
+
+.resepsjon .photoCarousel .photoElem img,
+.resepsjon .photoCarousel .photoElem .title,
+.resepsjon .photoCarousel .photoElem .description
+{
+  position: absolute;
+}
+
+.photoCarousel .photoElem img
+{
+  max-height: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.resepsjon .photoCarousel .photoElem .title,
+.resepsjon .photoCarousel .photoElem .description
+{
+  text-align: center;
+  color: #fff;
+}
+
+
+.resepsjon .photoCarousel .photoElem img
+{
+  max-height: 100%;
+  max-width: 100%;
+}
+
+.resepsjon .photoCarousel .photoElem .title
+{
+  background-color: rgba(229, 25, 15, 0.65);
+}
+
+.resepsjon .photoCarousel .photoElem .description
+{
+  background-color: rgba(0, 0, 0, 0.85);
+}
+
+.vertical .resepsjon .photoCarousel .photoElem .title,
+.vertical .resepsjon .photoCarousel .photoElem .description
+{
+  width: 100%;
+}
+
+.resepsjon .events
+{
+  margin: 0;
+  padding: 0;
+}
+
+.resepsjon .events > ul > li {
+  list-style: none;
+}
+
+.resepsjon .events > ul {
+  margin-left: 0;
+}
+
+.resepsjon .events .day > h1,
+.resepsjon .events .day ul.collection > li .title
+{
+  text-shadow: #fff 1px 1px 1px;
+}
+
+.resepsjon .events .day > h1
+{
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  border-top: 1px solid #595959;
+  border-bottom: 1px solid #595959;
+  padding-top: 2px;
+}
+
+.resepsjon .events .day ul.collection
+{
+  margin: 0;
+  padding: 0;
+}
+
+.resepsjon .events .day ul.collection > li
+{
+  display: block;
+  width: 50%;
+  float: left;
+  list-style: none;
+  border-bottom: 1px solid #595959;
+}
+
+.resepsjon .events .day ul.collection > li:nth-of-type(odd)
+{
+  border-right: 1px solid #595959;
+}
+
+.resepsjon .events .day:not(:last-of-type) ul.collection.odd > li:nth-last-of-type(1),
+.resepsjon .events .day:not(:last-of-type) ul.collection:not(.odd) > li:nth-last-of-type(1),
+.resepsjon .events .day:not(:last-of-type) ul.collection:not(.odd) > li:nth-last-of-type(2)
+{
+  border-bottom: none;
+}
+
+.resepsjon .events .day ul.collection > li .title
+{
+  line-height: 1;
+}
+
+.resepsjon .events .day ul.collection > li .subdata
+{
+  color: #565656;
+}
+
+/*.jcarousel {
+    position: relative;
+    overflow: hidden;
+}
+
+.jcarousel > ul {
+    width: 20000em;
+    position: absolute;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.jcarousel > ul > li {
+    float: left;
+}
+
+.jcarousel[dir=rtl] > ul > li {
+    float: right;
+}*/
+
+/**** Size: 1280x720 vertical ****/
+
+.s1280x720.vertical .resepsjon .photoCarousel
+{
+  height: 415px;
+  width: 100%;
+}
+
+.s1280x720.vertical .resepsjon .photoCarousel .photoElem
+{
+  height: 415px;
+}
+
+.s1280x720.vertical .resepsjon .photoCarousel .photoElem .title
+{
+  bottom: 25px;
+  height: 55px;
+  font-size: 52px;
+}
+
+.s1280x720.vertical .resepsjon .photoCarousel .photoElem .description
+{
+  bottom: 0px;
+  height: 25px;
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+.s1280x720.vertical .resepsjon .events,
+.s1280x720.vertical .resepsjon .events > ul,
+{
+  height: 825px; /* 865 - 40 */
+  width: 100%;
+}
+
+.s1280x720.vertical .resepsjon .events .day > h1
+{
+  height: 80px;
+  font-size: 67px;
+  padding-left: 32px;
+}
+
+.s1280x720.vertical .resepsjon .events .day ul.collection > li
+{
+  width: 50%;
+  height: 110px;
+  padding-left: 32px;
+  padding-top: 16px;
+  padding-right: 8px;
+}
+
+.s1280x720.vertical .resepsjon .events .day ul.collection > li .title
+{
+  font-size: 33px;
+}
+
+.s1280x720.vertical .resepsjon .events .day ul.collection > li .subdata
+{
+  font-size: 18px;
+}
+
+/* For modern browsers */
+.cf:before,
+.cf:after {
+    content:"";
+    display:table;
+}
+
+.cf:after {
+    clear:both;
+}
+
+
+.resepsjon .photoCarousel .photoElem
+{
+  -moz-transition: opacity 400ms linear 0s;
+  -webkit-transition: opacity 400ms linear 0s;
+  -ms-transition: opacity 400ms linear 0s;
+  transition: opacity 400ms linear 0s;
+}
+
+  /* Before */
+.resepsjon .photoCarousel .photoElem { opacity: 0; }
+  /* Now */
+.resepsjon .photoCarousel .photoElem[aria-selected] { opacity: 1; }
+  /* After */
+.resepsjon .photoCarousel .photoElem[aria-selected] ~ .photoElem { opacity: 0; }

@@ -1,0 +1,46 @@
+<script id="resepsjonSection" type="x-jquery-tmpl">
+  <section class="resepsjon" data-duration="10000">
+
+    <div class="photoCarousel">
+      {{tmpl(promos) "#resepsjonPhotoElem"}}
+    </div>
+
+    <div class="events">
+      <ul>
+        {{tmpl(days) "#resepsjonDay"}}
+      </ul>
+    </div>
+  </section>
+</script>
+
+<script id="resepsjonDay" type="x-jquery-tmpl">
+<li class="day">
+  <h1>${ formatDate(date) }</h1>
+  <ul class="collection cf {{if events.length % 2 == 1}}odd{{/if}}">
+    {{tmpl(events) "#resepsjonEvent"}}
+  </ul>
+</li>
+</script>
+
+<script id="resepsjonEvent" type="x-jquery-tmpl">
+<li>
+  <div class="title">${title}</div>
+  <div class="subdata">
+    <span class="category">
+    {{each categories}}
+         ${$value.name}{{if $index < categories.length-1}}, {{/if}}
+    {{/each}}
+    </span> - 
+    <span class="time">${formatTime(startTime)}</span> -
+    <span class="location">{{if location_id > 0}} ${commonLocation.name} {{else}} ${customLocation} {{/if}}</span>
+  </div>
+</li>
+</script>
+
+<script id="resepsjonPhotoElem" type="x-jquery-tmpl">
+<div class="photoElem">
+  <img src="" data-src="${src}" alt="${title}" />
+  <div class="title">${title}</div>
+  <div class="description">${description}</div>
+</div>
+</script>
