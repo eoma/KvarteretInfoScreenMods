@@ -1,6 +1,6 @@
-jQuery(document).ready(function() {
+"use strict";
 
-	$.getScript(moduleUrl.resepsjon + '/jquery.jcarousel.min.js');
+jQuery(document).ready(function() {
 
 	$.get(moduleUrl.resepsjon + '/templates/_section.tmpl.html', function(templates) {
 		// Inject all those templates at the end of the document.

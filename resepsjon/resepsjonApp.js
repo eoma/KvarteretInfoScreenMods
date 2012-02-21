@@ -1,3 +1,5 @@
+"use strict";
+
 var resepsjonApp;
 
 (function ($) {
@@ -155,7 +157,7 @@ var resepsjonApp;
 
 				console.log("queryParams", queryParams);
 
-				data = {
+				var data = {
 					promos: null,
 					events: null,
 				};

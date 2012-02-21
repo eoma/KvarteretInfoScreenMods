@@ -1,3 +1,5 @@
+"use strict";
+
 var eventQuery = function() {
 
 	var server = 'http://events.kvarteret.no/api/json/';

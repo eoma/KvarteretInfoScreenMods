@@ -1,4 +1,6 @@
-function formatDate(dateString) {
+"use strict";
+
+function formatDate(dateString, excludeYear) {
 	// Will format a date according to norwegian standards
 	var months = ['Januar', 'Februar', 'Mars', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Desember'],
 	    days = ['Søndag', 'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag'],
@@ -31,7 +33,11 @@ function formatDate(dateString) {
 	} else if ( (date.getTime() - today.getTime()) == 24*60*60*1000 ) {
 		return "I morgen";
 	} else {
-		return days[date.getDay()] + ' ' + day + '. ' + months[month] + ' ' + year;
+		if ( (typeof excludeYear === "boolean") && (excludeYear === true) ) {
+			return days[date.getDay()] + ' ' + day + '. ' + months[month];
+		} else {
+			return days[date.getDay()] + ' ' + day + '. ' + months[month] + ' ' + year;
+		}
 	}
 }
 
