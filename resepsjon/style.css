@@ -70,16 +70,29 @@
   background-color: rgba(0, 0, 0, 0.85);
 }
 
-.vertical .resepsjon .photoCarousel .photoElem .title,
-.vertical .resepsjon .photoCarousel .photoElem .description
+.resepsjon .photoCarousel .photoElem .title,
+.resepsjon .photoCarousel .photoElem .description
 {
   width: 100%;
 }
 
-.resepsjon .events
+.resepsjon .events,
+.resepsjon .sheetstack,
+.resepsjon .sheetstack > li
 {
   margin: 0;
   padding: 0;
+}
+
+.resepsjon .sheetstack {
+  position: relative;
+}
+
+.resepsjon .sheetstack > li {
+  list-style: none;
+  display: block;
+  position: absolute;
+  overflow: hidden;
 }
 
 .resepsjon .events > ul > li {
@@ -118,15 +131,38 @@
   width: 50%;
   float: left;
   list-style: none;
-  border-bottom: 1px solid #595959;
+  border-top: 1px solid #595959;
+  /*overflow: hidden;*/
+  margin-top: -1px;
 }
 
 .resepsjon .events .day ul.collection > li:nth-of-type(odd)
 {
+  clear: left;
   border-right: 1px solid #595959;
 }
 
-.resepsjon .events .day:not(:last-of-type) ul.collection.odd > li:nth-last-of-type(1),
+.resepsjon .events .day ul.collection > li:nth-of-type(even)
+{
+  clear: right;
+  border-left: 1px solid #595959;
+  margin-left: -1px;
+}
+
+.resepsjon .events .day ul.collection.odd > li:nth-last-of-type(2)
+{
+  border-bottom: 1px solid #595959;
+}
+
+.resepsjon .events .day:last-of-type ul.collection.odd > li:last-of-type,
+.resepsjon .events .day:last-of-type ul.collection:not(.odd) > li:nth-last-of-type(1),
+.resepsjon .events .day:last-of-type ul.collection:not(.odd) > li:nth-last-of-type(2)
+{
+  border-bottom: 1px solid #595959;
+}
+
+
+.resepsjon .events .day:not(:last-of-type) ul.collection.odd > li:last-of-type,
 .resepsjon .events .day:not(:last-of-type) ul.collection:not(.odd) > li:nth-last-of-type(1),
 .resepsjon .events .day:not(:last-of-type) ul.collection:not(.odd) > li:nth-last-of-type(2)
 {
@@ -192,8 +228,10 @@
   line-height: 1.6;
 }
 
+.s1280x720.vertical .resepsjon .sheetstack,
+.s1280x720.vertical .resepsjon .sheetstack > li,
 .s1280x720.vertical .resepsjon .events,
-.s1280x720.vertical .resepsjon .events > ul,
+.s1280x720.vertical .resepsjon .events > ul
 {
   height: 825px; /* 865 - 40 */
   width: 100%;
@@ -209,7 +247,7 @@
 .s1280x720.vertical .resepsjon .events .day ul.collection > li
 {
   width: 50%;
-  height: 110px;
+  min-height: 110px;
   padding-left: 32px;
   padding-top: 16px;
   padding-right: 8px;
@@ -224,6 +262,78 @@
 {
   font-size: 18px;
 }
+
+/**** Size : 1024x768 ****/
+
+.s1024x768 .resepsjon .photoCarousel
+{
+  position: absolute;
+  left: 0;
+  height: 768px;
+  width: 632px;
+}
+
+.s1024x768 .resepsjon .photoCarousel .photoElem
+{
+  height: 768px;
+}
+
+.s1024x768 .resepsjon .photoCarousel .photoElem .title
+{
+  bottom: 65px;
+  height: 55px;
+  font-size: 52px;
+}
+
+.s1024x768 .resepsjon .photoCarousel .photoElem .description
+{
+  bottom: 40px;
+  height: 25px;
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+.s1024x768 .resepsjon .sheetstack {
+  position: absolute;
+  left: 632px;
+  top: 0;
+}
+
+.s1024x768 .resepsjon .sheetstack,
+.s1024x768 .resepsjon .sheetstack > li,
+.s1024x768 .resepsjon .events,
+.s1024x768 .resepsjon .events > ul
+{
+  height: 728px; /* 865 - 40 */
+  width: 392px;
+}
+
+.s1024x768 .resepsjon .events .day > h1
+{
+  height: 80px;
+  font-size: 67px;
+  padding-left: 32px;
+}
+
+.s1024x768 .resepsjon .events .day ul.collection > li
+{
+  width: 50%;
+  min-height: 110px;
+  padding-left: 32px;
+  padding-top: 16px;
+  padding-right: 8px;
+}
+
+.s1024x768 .resepsjon .events .day ul.collection > li .title
+{
+  font-size: 33px;
+}
+
+.s1024x768 .resepsjon .events .day ul.collection > li .subdata
+{
+  font-size: 18px;
+}
+
 
 /* For modern browsers */
 .cf:before,
@@ -251,3 +361,20 @@
 .resepsjon .photoCarousel .photoElem[aria-selected] { opacity: 1; }
   /* After */
 .resepsjon .photoCarousel .photoElem[aria-selected] ~ .photoElem { opacity: 0; }
+
+
+
+.resepsjon .sheetstack > li
+{
+  -moz-transition: opacity 400ms linear 0s;
+  -webkit-transition: opacity 400ms linear 0s;
+  -ms-transition: opacity 400ms linear 0s;
+  transition: opacity 400ms linear 0s;
+}
+
+  /* Before */
+.resepsjon .sheetstack > li { opacity: 0; }
+  /* Now */
+.resepsjon .sheetstack > li[aria-selected] { opacity: 1; }
+  /* After */
+.resepsjon .sheetstack > li[aria-selected] ~ li { opacity: 0; }

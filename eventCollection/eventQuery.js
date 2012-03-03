@@ -9,11 +9,22 @@ var eventQuery = function() {
 			params = {};
 		}
 
+		var requestError = function (xhr, textStatus, errorThrown) {
+			console.log('eventQuery ajax error: ' + textStatus + ' msg: ' + errorThrown);
+			setTimeout(
+				function() {
+					query(url, params, callback);
+				},
+				Math.random() * 700 + 300
+			);
+		};
+
 		$.ajax(
 			{
 				url: url,
 				data: params,
 				success: callback,
+				error: requestError,
 				dataType: 'jsonp',
 			}
 		);

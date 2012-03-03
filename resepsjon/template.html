@@ -10,17 +10,34 @@
   height: 1280px;
   width: 720px;
 }
+
+.s1024x768
+{
+  height: 768px;
+  width: 1024px;
+}
+
+body {
+	position: relative;
+}
+
+section {
+	position: absolute;
+	width: 100%;
+}
  </style>
  <link rel="stylesheet" type="text/css" href="style.css" />
 </head>
 
-<body class="vertical s1280x720">
+<body class="s1280x720 vertical">
+<!--<body class="s1024x768">-->
 
 <section class="resepsjon">
 
   <div class="photoCarousel">
     <div class="photoElem" aria-selected="true">
-      <img src="http://placekitten.com/720/415" alt="someImage" />
+      <img src="http://placekitten.com/632/728" alt="someImage" />
+      <!--<img src="http://placekitten.com/720/415" alt="someImage" />-->
       <div class="title">Some title</div>
       <div class="description">blabbety bla. BLA! bla? ÆØÅ!11!!1</div>
     </div>
@@ -34,6 +51,9 @@
 
   <div class="events">
 
+   <ul class="sheetstack">
+
+    <li class="events" aria-selected="true">
     <div class="day">
       <h1>I dag</h1>
       <ul class="collection cf odd">
@@ -46,7 +66,7 @@
           </div>
         </li>
         <li>
-          <div class="title">Lorum ipsum, lik dis if u wanna c it. Lik yea, really.</div>
+          <div class="title">Lorum ipsum, lik dis if u wanna c it. Lik yea, really. Lorum ipsum, lik dis if u wanna c it. Lik yea, really.</div>
           <div class="subdata">
             <span class="time">21:30</span> -
             <span class="category">Category 1, Category 2</span> - 
@@ -61,12 +81,20 @@
             <span class="location">Location</span>
           </div>
         </li>
+        <!--<li>
+          <div class="title">Lorum ipsum, lik dis if u wanna c it. Lik yea, really. Lorum ipsum, lik dis if u wanna c it. Lik yea, really.</div>
+          <div class="subdata">
+            <span class="time">21:30</span> -
+            <span class="category">Category 1, Category 2</span> - 
+            <span class="location">Location 2</span>
+          </div>
+        </li>-->
       </ul>
     </div>
-
-    <div class="day">
+    
+        <div class="day">
       <h1>I morgen</h1>
-      <ul class="collection cf ">
+      <ul class="collection cf odd">
         <li>
           <div class="title">Blabla</div>
           <div class="subdata">
@@ -75,13 +103,15 @@
             <span class="location">Location</span>
           </div>
         </li>
-        <li>
+        <!--<li>
           <div class="title">Lorum ipsum, lik dis if u wanna c it. Lik yea, really.</div>
           <div class="subdata">
             <span class="time">21:30</span> -
             <span class="category">Category 1, Category 2</span> - 
             <span class="location">Location 2</span>
           </div>
+        </li>
+        -->
       </ul>
     </div>
 
@@ -103,8 +133,31 @@
             <span class="category">Category 1, Category 2</span> - 
             <span class="location">Location 2</span>
           </div>
+        </li>
+        <li>
+          <div class="title">Blabla</div>
+          <div class="subdata">
+            <span class="time">15:00</span> -
+            <span class="category">Category 1, Category 2</span> - 
+            <span class="location">Location</span>
+          </div>
+        </li>
+        <li>
+          <div class="title">Lorum ipsum, lik dis if u wanna c it. Lik yea, really.</div>
+          <div class="subdata">
+            <span class="time">21:30</span> -
+            <span class="category">Category 1, Category 2</span> - 
+            <span class="location">Location 2</span>
+          </div>
+        </li>
       </ul>
     </div>
+    
+    </li>
+
+   </ul>
+
+
 
   </div>
 

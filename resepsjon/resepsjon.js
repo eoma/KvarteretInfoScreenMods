@@ -3,16 +3,40 @@
 jQuery(document).ready(function() {
 
 	$.get(moduleUrl.resepsjon + '/templates/_section.tmpl.html', function(templates) {
-		// Inject all those templates at the end of the document.
+		// Inject templates at the end of the document.
 		$('body').append(templates);
 	});
 });
 
+(function($) {
+    $.fn.hasScrollBar = function() {
+        return this.get(0).scrollHeight > this.height();
+    }
+})(jQuery);
+
 var resepsjon = {
-	currentPromo : null,
-	currentPromoRef : 0,
-	promoReferences : [],
+	promo : {
+		current : null,
+		currentRef : 0,
+		ref : [],
+	},
+
+	sheet : {
+		current : null,
+		currentRef : 0,
+		ref : [],
+	},
+
+	id : { promo: 0, sheet: 1 },
+
 	slide : null,
+
+	duration : {
+		table : {},
+		tableIndex : [],
+		current : 0,
+		duration : 10 * 1000,
+	},
 
 	initialized : false,
 	slideRuns : 0,
@@ -76,17 +100,70 @@ var resepsjon = {
 		if (slide.hasClass('resepsjon')) {
 			t.slide = slide;
 
-			t.setupPromoReferences();
+			t.setupReferences();
+			
+			t.initDuration();
+			
+			var promoNum = t.promo.ref.length;
+			var sheetNum = t.sheet.ref.length;
+			
+			if ( (promoNum > 0) && (sheetNum > 0) ) {
+				var maxObj = { num: 0, id: -1 };
+				var minObj = { num: 0, id: -1 };
+				
+				if (promoNum > sheetNum) {
+					maxObj.num = promoNum;
+					maxObj.id = t.id.promo;
+					
+					minObj.num = sheetNum;
+					minObj.id = t.id.sheet;
+				} else {
+					maxObj.num = sheetNum;
+					maxObj.id = t.id.sheet;
 
-			//if (t.slide.find('')
+					minObj.num = promoNum;
+					minObj.id = t.id.promo;
+				}
 
-			/*t.slide.find('.events').jcarousel({
-				vertical: true,
-				scroll: 1,
-				auto: 2,
-				wrap: 'circular',
-				visible: 2,
-			});*/
+				var scaleFactor = 1;
+
+				if (minObj.num > 1) {
+					while (maxObj.num / (minObj.num * scaleFactor) > 1.5) {
+						scaleFactor += 1;
+					}
+				}
+
+				for (var i = 1; i < maxObj.num; i++) {
+					var time = i * t.duration.duration;
+
+					if (typeof t.duration.table[time] === 'undefined') {
+						t.duration.table[time] = [];
+					}
+					t.duration.table[time].push(maxObj.id);
+				}
+				
+				for (var i = 1; i < scaleFactor * minObj.num; i++) {
+					var time = Math.floor(i * t.duration.duration * maxObj.num / (minObj.num * scaleFactor));
+
+					if (typeof t.duration.table[time] === 'undefined') {
+						t.duration.table[time] = [];
+					}
+					t.duration.table[time].push(minObj.id);
+				}
+				
+				t.duration.tableIndex = t.getKeys(t.duration.table);
+				t.duration.tableIndex.sort(function (a, b) {
+					return a - b;
+				});
+				
+				//console.log(t.duration.tableIndex);
+			} else if (sheetNum > 0) {
+				// No promo
+			} else if (promoNum > 0) {
+				// No sheets
+			} else {
+				// Nothing
+			}
 
 			return true;
 		}
@@ -97,61 +174,147 @@ var resepsjon = {
 		// Will do a single element cycle, will return true or next callback
 		//  time if there are more elements to go through, false otherwise.
 
-		t.nextPromo();
+		var retVal = false;
 
-		if (t.currentPromoRef <= (t.promoReferences.length - 1)) {
-			return true;
+		if (t.duration.current == -1) {
+			t.nextTransition(t.promo);
+			t.nextTransition(t.sheet);
+			
+			t.duration.current++;
+			
+			retVal = parseInt(t.duration.tableIndex[t.duration.current], 10);
+
+			t.scrollSheetIfNecessary(t.duration.duration - 400);
 		} else {
-			return false;
+			var prev = t.duration.tableIndex[t.duration.current];
+			
+			console.log(prev, t.duration.table[prev],
+			            $.inArray(t.id.promo, t.duration.table[prev]),
+			            $.inArray(t.id.sheet, t.duration.table[prev])
+			);
+			
+			if ($.inArray(t.id.promo, t.duration.table[prev]) >= 0) {
+				t.nextTransition(t.promo);
+			}
+			
+			if ($.inArray(t.id.sheet, t.duration.table[prev]) >= 0) {
+				t.nextTransition(t.sheet);
+				t.scrollSheetIfNecessary(t.duration.duration - 400);
+			}
+			
+			if (t.duration.current < t.duration.tableIndex.length - 1) {
+				retVal = parseInt(t.duration.tableIndex[t.duration.current + 1] - prev, 10);
+				t.duration.current++;
+			} else {
+				retVal = false;
+			}
 		}
+
+		console.log("retVal", retVal, typeof retVal);
+
+		return retVal;
 	},
 
-	nextPromo : function () {
-		// Will fade out previous event, fade in new event
-		var t = this;
-
-		if (t.currentPromo !== null) {
-			t.currentPromo.removeAttr('aria-selected');
+	nextTransition : function (transObj) {
+		if (transObj.current !== null) {
+			transObj.current.removeAttr('aria-selected');
 		}
 
 		//console.log('t.currentPromoRef', t.currentPromoRef, 't.promoReferences.length', t.promoReferences.length);
 
-		t.currentPromo = t.promoReferences.eq(t.currentPromoRef);
-
-		if (t.currentPromoRef >= t.promoReferences.length) {
-			// This will cause an eternal cycle, keep your tabs on
-			// t.currentPromoRef and t.promoReferences.length
-			t.currentPromoRef = 0;
-		} else {
-			t.currentPromoRef++;
-		}
+		transObj.current = transObj.ref.eq(transObj.currentRef);
 
 		//console.log(t.currentPromo);
 
-		t.currentPromo.attr('aria-selected', true);
+		transObj.current.attr('aria-selected', true);
+
+		if (transObj.currentRef < transObj.ref.length - 1) {
+			// This will cause an eternal cycle, keep your tabs on
+			// t.currentPromoRef and t.promoReferences.length
+			transObj.currentRef++;
+		} else {
+			transObj.currentRef = 0;
+		}
 	},
 
+	scrollSheetIfNecessary : function (time) {
+		var t = this;
+
+		var elem = t.sheet.current;
+
+		console.log(elem.hasScrollBar(), elem.outerHeight(true) - elem.get(0).scrollHeight);
+
+		if (elem.hasScrollBar()) {
+			console.log('will scroll');
+
+			elem
+				.animate(
+					{
+						scrollTop: Math.abs(elem.outerHeight(true) - elem.get(0).scrollHeight)
+					},
+					(time - 1000)/2
+				)
+				.delay(1000)
+				.animate(
+					{
+						scrollTop: 0
+					},
+					(time - 1000)/2
+				)
+			;
+		}
+	},
 
 	unbind : function () {
 		var t = this;
 
-		if (t.currentPromo !== null) {
-			t.currentPromo.removeAttr('aria-selected');
+		if (t.promo.current !== null) {
+			t.promo.current.removeAttr('aria-selected');
 		}
 
-		//t.slide.find('.events').jcarousel('destroy');
+		if (t.sheet.current !== null) {
+			t.sheet.current.removeAttr('aria-selected');
+		}
+
+		t.initState();
 
 		t.slide = null;
-		t.currentPromo = null;
-		t.currentPromoRef = 0;
-		t.promoReferences = [];
 
 		console.log('module ' + t.getName() + ' unbound from slide');
 	},
 
-	setupPromoReferences : function () {
+	setupReferences : function () {
 		var t = this;
-		t.promoReferences = t.slide.find('.photoElem');
-		t.currentPromoRef = 0;
-	}
+		t.promo.ref = t.slide.find('.photoElem');
+		t.promo.currentRef = 0;
+		
+		t.sheet.ref = t.slide.find('.sheetstack > li');
+		t.sheet.currentRef = 0;
+	},
+	
+	getKeys : function(obj) {
+		var keys = [];
+		for(var key in obj) {
+			if (obj.hasOwnProperty(key)) {
+				keys.push(key);
+			}
+		}
+		return keys;
+	},
+	
+	initState : function () {
+		var t = this;
+
+		t.duration.table = {};
+		t.duration.tableIndex = [];
+		t.duration.current = -1;
+
+		t.promo.current = null;
+		t.promo.currentRef = 0;
+		t.promo.ref = [];
+
+		t.sheet.current = null;
+		t.sheet.currentRef = 0;
+		t.sheet.ref = [];
+	},
 };

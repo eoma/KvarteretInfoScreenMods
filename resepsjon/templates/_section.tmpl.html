@@ -5,21 +5,36 @@
       {{tmpl(promos) "#resepsjonPhotoElem"}}
     </div>
 
-    <div class="events">
-      <ul>
+    <ul class="sheetstack">
+      <li class="events">
         {{tmpl(days) "#resepsjonDay"}}
-      </ul>
-    </div>
+      </li>
+
+      {{if typeof helhus.date !== "undefined" }}
+      <li class="events">
+        {{tmpl(helhus) "#resepsjonHelhus"}}
+      </li>
+      {{/if}}
+    </ul>
   </section>
 </script>
 
 <script id="resepsjonDay" type="x-jquery-tmpl">
-<li class="day">
-  <h1>${ formatDate(date) }</h1>
+<div class="day">
+  <h1>${ formatDate(date, true) }</h1>
   <ul class="collection cf {{if events.length % 2 == 1}}odd{{/if}}">
     {{tmpl(events) "#resepsjonEvent"}}
   </ul>
-</li>
+</div>
+</script>
+
+<script id="resepsjonHelhus" type="x-jquery-tmpl">
+<div class="day">
+  <h1>Helhus - ${ formatDate(date, true) }</h1>
+  <ul class="collection cf {{if events.length % 2 == 1}}odd{{/if}}">
+    {{tmpl(events) "#resepsjonEvent"}}
+  </ul>
+</div>
 </script>
 
 <script id="resepsjonEvent" type="x-jquery-tmpl">

@@ -17,7 +17,6 @@ var resepsjonApp;
 			t.state.totalCount = 0;
 
 			t.state.filter = {};
-			//$('.resepsjon').one('DOMNodeInserted', '.photoElem > img', t.loadPicture);
 		},
 
 		render : function (data, clear, putAfterElement) {
@@ -26,6 +25,7 @@ var resepsjonApp;
 			 * {
 			 *   promos: []
 			 *   events: []
+			 *   helhus: []
 			 * }
 			 */
 			if (clear === true) {
@@ -34,7 +34,8 @@ var resepsjonApp;
 
 			var dates = groupEventsByDate(data.events.data),
 			    dateEvents = [],
-			    promoEvents = [];
+			    promoEvents = [],
+			    helhus = {};
 
 			$.each(dates, function (date) {
 
@@ -55,11 +56,18 @@ var resepsjonApp;
 
 				if ( ! $.isEmptyObject(event.primaryPicture) ) {
 					console.log(event.primaryPicture);
-					promoEvents.push({
+					
+					var promoEv = {
 						src: event.primaryPicture.url,
 						title: event.title,
-						description: formatDate(event.startDate) + ' - ' + formatTime(event.startTime) + ' - CC: ' + event.covercharge
-					});
+						description: formatDate(event.startDate, true) + ' - ' + formatTime(event.startTime)
+					};
+					
+					if (event.covercharge.length > 0) {
+						promoEv.description += ' - CC: ' + event.covercharge;
+					}
+					
+					promoEvents.push(promoEv);
 				}
 			});
 
@@ -72,33 +80,34 @@ var resepsjonApp;
 						description: "Just a puppy from placepuppy.it",
 				});
 				promoEvents.push({
-						src: "http://placekitten.com/g/720/415",
+						src: "http://placekitten.com/720/415",
 						title: "Just a lil kitty",
 						description: "Just a kitty from placekitten.com",
 				});
-				promoEvents.push({
-						src: "http://placekitten.com/720/415",
-						title: "Just a lil kitty",
-						description: "Just another kitten from placekitten.com",
-				});
+			}
+
+			if (data.helhus.count > 0) {
+				helhus.date = data.helhus.data[0].festival.startDate;
+				helhus.events = data.helhus.data;
 			}
 
 			var sectionData = {
 				days : dateEvents,
 				promos : promoEvents,
+                helhus : helhus,
 			};
+
+			console.log("sectionData", sectionData);
 
 			if ((typeof putAfterElement !== 'undefined') && (putAfterElement !== null)) {
 				console.log("will insert elements!");
+				var formatId = '#resepsjonSection';
 				if (putAfterElement.data('eventFormatId')) {
-					var formatId = putAfterElement.data('eventFormatId');
-					//console.log("eventFormatId", formatId, $('#' + formatId).html());
-					//putAfterElement.after($.tmpl($('#' + formatId).html(), dateEvents));
-
-					$('#' + formatId).tmpl(sectionData).insertAfter(putAfterElement);
-				} else {
-					$('#resepsjonSection').tmpl(sectionData).insertAfter(putAfterElement);
+					formatId = '#' + putAfterElement.data('eventFormatId');
 				}
+				
+				$(formatId).tmpl(sectionData).insertAfter(putAfterElement);
+				console.log(putAfterElement);
 			}
 
 			dates = null;
@@ -133,26 +142,6 @@ var resepsjonApp;
 
 				elemData = elems.eq(i).data();
 
-				if (typeof elemData.dayspan === 'number') {
-					queryParams.dayspan = elemData.dayspan;
-				}
-
-				if ((typeof elemData.arranger === 'number') || (typeof elemData.arranger === 'string')) {
-					queryParams.arranger_id = elemData.arranger;
-				}
-
-				if ((typeof elemData.location === 'number') || (typeof elemData.location === 'string')) {
-					queryParams.location_id = elemData.location;
-				}
-
-				if ((typeof elemData.category === 'number') || (typeof elemData.category === 'string')) {
-					queryParams.category_id = elemData.category;
-				}
-
-				if ((typeof elemData.festival === 'number') || (typeof elemData.festival === 'string')) {
-					queryParams.category_id = elemData.festival;
-				}
-
 				jQuery.extend(queryParams, t.state.filter);
 
 				console.log("queryParams", queryParams);
@@ -160,10 +149,12 @@ var resepsjonApp;
 				var data = {
 					promos: null,
 					events: null,
+					helhus: null,
 				};
 
 				var renderWhenAllIsDefined = function(index) {
-					if ((data.promos !== null) && (data.events !== null)) {
+					if ((data.promos !== null) && (data.events !== null) && (data.helhus !== null)) {
+						console.log("will render all items for index " + index + "!");
 						t.render(data, (index === 0) ? true : false, elems.eq(index));
 
 						t.fixPromoPictures();
@@ -174,21 +165,71 @@ var resepsjonApp;
 					}
 				};
 
-				t.loadEvents(queryParams, async, function (json, index) {
-					data.events = json;
-					renderWhenAllIsDefined(index);
-				}, i);
-
 				var queryPromoParams = {
 					category_id: "1,20",
 					dayspan: 13,
 					limit: 30
 				};
 
-				t.loadEvents(queryPromoParams, async, function (json, index) {
-					data.promos = json;
+				var prepareHelhus = function (json, index) {
+					data.helhus = json;
 					renderWhenAllIsDefined(index);
-				}, i);
+				};
+
+				var findHelhus = function(json, index) {
+					if (json.count >= 1) {
+						console.log("findHelhus", json);
+						t.loadEvents({festival_id: json.data[0].id}, async, prepareHelhus, index);
+					}
+				};
+
+				var ajaxQueueIndex = 0;
+				var ajaxQueue = [];
+
+				var nextAjaxQueue = function () {
+					if (ajaxQueueIndex < ajaxQueue.length) {
+						ajaxQueue[ajaxQueueIndex]();
+						ajaxQueueIndex += 1;
+					}
+				};
+
+				ajaxQueue = [
+					function (index) {
+						return function () {
+							t.loadEvents(queryParams, async, function (json, index) {
+								data.events = json;
+								nextAjaxQueue();
+								renderWhenAllIsDefined(index);
+							}, index);
+						}
+					}(i),
+					function (index) {
+						return function () {
+							t.loadEvents(queryPromoParams, async, function (json, index) {
+								data.promos = json;
+								nextAjaxQueue();
+								renderWhenAllIsDefined(index);
+							}, index);
+						}
+					}(i),
+					function (index) {
+						return function () {
+							eventQuery.festivalList(
+								{
+									title: 'helhus',
+									dayspan: 6,
+									limit: 1
+								},
+								function(json){
+									findHelhus(json, index);
+									nextAjaxQueue();
+								}
+							);
+						}
+					}(i)
+				];
+
+				nextAjaxQueue();
 			}
 		},
 
@@ -213,6 +254,12 @@ var resepsjonApp;
 
 			eventError = function (xhr, textStatus, errorThrown) {
 				console.log('error loading events: ' + textStatus + ' msg: ' + errorThrown);
+				setTimeout(
+					function() {
+						t.loadEvents(queryParams, async, callback, callbackArguments);
+					},
+					Math.random() * 700 + 300
+				);
 			};
 
 			//alert(t.isOnline());
