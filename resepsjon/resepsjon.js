@@ -100,9 +100,9 @@ var resepsjon = {
 		if (slide.hasClass('resepsjon')) {
 			t.slide = slide;
 
+			t.initState();
+
 			t.setupReferences();
-			
-			t.initDuration();
 			
 			var promoNum = t.promo.ref.length;
 			var sheetNum = t.sheet.ref.length;
