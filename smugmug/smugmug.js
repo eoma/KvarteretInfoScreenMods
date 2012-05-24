@@ -2,7 +2,7 @@ var smugmug = {
 	slide : null,
 	intialized : false,
 	nextRefresh : null,
-	refreshInterval : 120, /** standard refresh interval is 2 hours **/
+	refreshInterval : 5, /** standard refresh interval is 5 minutes **/
 
 	/**
 	 * Returns the name of this module. Required.
@@ -49,36 +49,44 @@ var smugmug = {
 		var t = this;
 		var nickname = smugmugElem.data('nickname');
 		var albumId = smugmugElem.data('albumId');
-		smugmugElem.empty();
-
-		smugmugElem.addClass("pictureCollection");
 
 		$.smugmug.albums.get(
-			{NickName: nickname, Empty: false},
+			{NickName: nickname, Extras:"LastUpdated", Empty: false},
 			function(data) {
 				var album = t.locateAlbum(data.Albums, albumId);
+				var lastUpdated = (new Date(album.LastUpdated)).getTime() / 1000;
 
-				$.smugmug.images.get(
-					{AlbumID: album.id, AlbumKey: album.Key, Extras: "XLargeURL,Caption,Height,Width"},
-					function (album) {
-						//console.log(album);
+				console.log(lastUpdated, smugmugElem.data("lastUpdated"), lastUpdated > smugmugElem.data("lastUpdated"));
 
-						for (var i = 0; i < album.Album.Images.length; i++) {
-							var image = album.Album.Images[i];
-							var imageElem = $("<img>");
+				if ( typeof smugmugElem.data("lastUpdated") === "undefined" || lastUpdated > smugmugElem.data("lastUpdated")) {
+					console.log("Will update photo elems.");
+					smugmugElem.empty();
+					smugmugElem.addClass("pictureCollection");
 
-							imageElem.attr({
-								alt: image.Caption,
-								width: image.Width,
-								height: image.Height,
-								src: image.XLargeURL,
-							});
+					smugmugElem.data("lastUpdated", lastUpdated);
 
-							smugmugElem.append(imageElem);
+					$.smugmug.images.get(
+						{AlbumID: album.id, AlbumKey: album.Key, Extras: "XLargeURL,Caption,Height,Width"},
+						function (album) {
+							//console.log(album);
+
+							for (var i = 0; i < album.Album.Images.length; i++) {
+								var image = album.Album.Images[i];
+								var imageElem = $("<img>");
+
+								imageElem.attr({
+									alt: image.Caption,
+									width: image.Width,
+									height: image.Height,
+									src: image.XLargeURL,
+								});
+
+								smugmugElem.append(imageElem);
+							}
+							pictureCollection.resizeImages(smugmugElem.find("img"));
 						}
-						pictureCollection.resizeImages(smugmugElem.find("img"));
-					}
-				);
+					);
+				}
 			}
 		);
 	},
