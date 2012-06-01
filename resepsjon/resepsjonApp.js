@@ -216,7 +216,7 @@ var resepsjonApp;
 						return function () {
 							eventQuery.festivalList(
 								{
-									title: 'helhus',
+									titleContains: 'helhus',
 									dayspan: 6,
 									limit: 1
 								},
