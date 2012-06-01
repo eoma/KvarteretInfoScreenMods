@@ -86,7 +86,7 @@ var resepsjonApp;
 				});
 			}
 
-			if (data.helhus.count > 0) {
+			if (data.helhus !== null && data.helhus.count > 0) {
 				helhus.date = data.helhus.data[0].festival.startDate;
 				helhus.events = data.helhus.data;
 			}
@@ -153,7 +153,7 @@ var resepsjonApp;
 				};
 
 				var renderWhenAllIsDefined = function(index) {
-					if ((data.promos !== null) && (data.events !== null) && (data.helhus !== null)) {
+					if ((data.promos !== null) && (data.events !== null)) {
 						console.log("will render all items for index " + index + "!");
 						t.render(data, (index === 0) ? true : false, elems.eq(index));
 
