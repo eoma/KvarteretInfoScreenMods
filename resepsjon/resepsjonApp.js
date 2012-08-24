@@ -144,7 +144,7 @@ var resepsjonApp;
 
 				jQuery.extend(queryParams, t.state.filter);
 
-				console.log("queryParams", queryParams);
+				//console.log("queryParams", queryParams);
 
 				var data = {
 					promos: null,
@@ -153,7 +153,7 @@ var resepsjonApp;
 				};
 
 				var renderWhenAllIsDefined = function(index) {
-					if ((data.promos !== null) && (data.events !== null)) {
+					if ((data.promos !== null) && (data.events !== null) && (data.helhus !== null)) {
 						console.log("will render all items for index " + index + "!");
 						t.render(data, (index === 0) ? true : false, elems.eq(index));
 
@@ -178,8 +178,10 @@ var resepsjonApp;
 
 				var findHelhus = function(json, index) {
 					if (json.count >= 1) {
-						console.log("findHelhus", json);
+						//console.log("findHelhus", json);
 						t.loadEvents({festival_id: json.data[0].id}, async, prepareHelhus, index);
+					} else {
+						prepareHelhus(false, index);
 					}
 				};
 
