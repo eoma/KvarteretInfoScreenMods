@@ -38,16 +38,18 @@ var pictureCollection = {
 
 		var bodyRatio = bodyHeight / bodyWidth;
 
-		console.log('bodyRatio', bodyRatio);
+		//console.log('bodyRatio', bodyRatio);
 
 		function resizeAndPadImage () {
 			var image = $(this);
+
+			//console.log("isResized", image.data("isResized"));
 
 			if (typeof (image.data('isResized')) === "undefined") {
 				var imageHeight = parseInt(image.css('height').replace('px', ''), 10);
 				var imageWidth = parseInt(image.css('width').replace('px', ''), 10);
 
-				console.log('imageWidth', imageWidth, 'imageHeight', imageHeight);
+				//console.log('imageWidth', imageWidth, 'imageHeight', imageHeight);
 
 				var imageRatio = imageHeight / imageWidth;
 
@@ -105,6 +107,8 @@ var pictureCollection = {
 			t.slide = slide;
 			t.images = t.slide.find('img');
 
+			//console.log("this collection has " + t.images.length +  " images");
+
 			return true;
 		} else {
 			return false;
@@ -122,18 +126,20 @@ var pictureCollection = {
 				t.activeImage.removeAttr('aria-selected');
 				t.activeImageRef++;
 			}
-			
+
+			//console.log("On image no. " + (t.activeImageRef + 1) + " of " + t.images.length);
+		
 			t.activeImage = t.images.eq(t.activeImageRef);
 
 			t.activeImage.attr('aria-selected', true);
 
 			if (t.activeImageRef < (t.images.length - 1)) {
-				return true;
+				return true; // We have more stuff to show
 			} else {
-				return false;
+				return false; // Go to next slide
 			}
 		} else {
-			return false;
+			return false; // Go to next slide
 		}
 	},
 
