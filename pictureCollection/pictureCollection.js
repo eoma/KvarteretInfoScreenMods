@@ -3,8 +3,11 @@
 var pictureCollection = {
 	slide : null,
 	images : null,
+	imagesPerCycle : 0,
+	imageCount : 0,
+	imageOffset : 0,
 	activeImage : null,
-	activeImageRef : null,
+	activeImageRef : 0,
 	intialized : false,
 
 	getName : function () {
@@ -107,6 +110,18 @@ var pictureCollection = {
 			t.slide = slide;
 			t.images = t.slide.find('img');
 
+			if ((typeof(t.slide.data('imagesPerCycle')) == 'number') && (t.slide.data('imagesPerCycle') > 0)) {
+				t.imagesPerCycle = t.slide.data('imagesPerCycle');
+				if (t.imagesPerCycle > t.images.length) {
+					t.imagesPerCycle = t.images.length;
+				}
+
+				if (typeof(t.slide.data('imageOffset')) == 'number') {
+					t.activeImageRef = t.slide.data('imageOffset');
+					t.activeImageRef = t.activeImageRef % t.images.length;
+				}
+			}
+
 			//console.log("this collection has " + t.images.length +  " images");
 
 			return true;
@@ -125,18 +140,35 @@ var pictureCollection = {
 			if (t.activeImage != null) {
 				t.activeImage.removeAttr('aria-selected');
 				t.activeImageRef++;
+				t.activeImageRef = t.activeImageRef % t.images.length;
 			}
 
 			//console.log("On image no. " + (t.activeImageRef + 1) + " of " + t.images.length);
-		
+
+			console.log('imagesPerCycle', t.imagesPerCycle, t.activeImageRef, t.imageCount, t.imageOffset);
+
 			t.activeImage = t.images.eq(t.activeImageRef);
 
 			t.activeImage.attr('aria-selected', true);
 
-			if (t.activeImageRef < (t.images.length - 1)) {
-				return true; // We have more stuff to show
+			if (t.imagesPerCycle > 0) {
+				t.activeImageRef = t.activeImageRef % t.images.length;
+
+				if (t.imageCount < t.imagesPerCycle - 1) {
+					t.imageCount++;
+					return true;
+				} else {
+					t.activeImageRef++;
+					t.activeImageRef = t.activeImageRef % t.images.length;
+					t.imageCount = 0;
+					return false;
+				}
 			} else {
-				return false; // Go to next slide
+				if (t.activeImageRef < (t.images.length - 1)) {
+					return true; // We have more stuff to show
+				} else {
+					return false; // Go to next slide
+				}
 			}
 		} else {
 			return false; // Go to next slide
@@ -150,10 +182,17 @@ var pictureCollection = {
 			t.activeImage.removeAttr('aria-selected');
 		}
 
+		if (t.imagesPerCycle > 0) {
+			t.slide.data('image-offset', t.activeImageRef);
+		}
+
 		t.slide = null;
 		t.activeImage = null;
 		t.activeImageRef = 0;
 		t.images = null;
+		t.imagesPerCycle = 0;
+		t.imageCounter = 0;
+		t.imageOffset = 0;
 		
 		console.log('module ' + t.getName() + ' unbound');
 		

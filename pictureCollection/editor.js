@@ -4,6 +4,8 @@ var pictureCollectionEditor = function (slide, elem) {
 		slide.content = "<section class=\"pictureCollection\"></section>";
 	}
 
+	var dom = jQuery(slide.content);
+
 	elem.addClass('pictureCollectionEditor');
 	elem.find('.title').eq(0).text('Picture collection');
 	var canvas = elem.find('.canvas').eq(0);
@@ -102,6 +104,15 @@ var pictureCollectionEditor = function (slide, elem) {
 		var section = $('<section />')
 			.addClass('pictureCollection');
 
+		var newImagesPerCycle = elem.find('.imagesPerCycle').eq(0).val();
+
+		console.log('images per cycle', newImagesPerCycle);
+		if (newImagesPerCycle > 0) {
+			//console.log('images per cycle', newImagesPerCycle);
+
+			section.attr('data-images-per-cycle', newImagesPerCycle);
+		}
+
 		var imgs = list.find('img');
 
 		for (var i = 0; i < imgs.length; i++) {
@@ -120,7 +131,7 @@ var pictureCollectionEditor = function (slide, elem) {
 		return "";
 	};
 
-	var dom = jQuery(slide.content);
+	//var dom = jQuery(slide.content);
 
 	var pictures = dom.find('img');
 
@@ -146,6 +157,20 @@ var pictureCollectionEditor = function (slide, elem) {
 	canvas.append(list);
 
 	leftToolbar.append($('<li />').text("Add picture").click(newImage));
+
+	var imagesPerCycle = 0;
+
+	if (typeof(dom.filter('section').eq(0).data('imagesPerCycle')) == 'number') {
+		imagesPerCycle = dom.filter('section').eq(0).data('imagesPerCycle');
+	}
+
+	leftToolbar.append($('<li />')
+		.text('Max images per cycle')
+		.append($('<input />')
+			.addClass('imagesPerCycle')
+			.val(imagesPerCycle)
+		)
+	);
 
 	leftToolbar = null;
 
