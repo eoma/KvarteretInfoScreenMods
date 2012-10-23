@@ -94,7 +94,8 @@ var resepsjonApp;
 			var sectionData = {
 				days : dateEvents,
 				promos : promoEvents,
-                helhus : helhus,
+				helhus : helhus,
+				extraClasses : "",
 			};
 
 			console.log("sectionData", sectionData);
@@ -102,6 +103,12 @@ var resepsjonApp;
 			if ((typeof putAfterElement !== 'undefined') && (putAfterElement !== null)) {
 				console.log("will insert elements!");
 				var formatId = '#resepsjonSection';
+
+				if (putAfterElement.hasClass("onlyPromo")) {
+					formatId = '#resepsjonSectionOnlyPromo';
+					sectionData.extraClasses += "onlyPromo";
+				}
+
 				if (putAfterElement.data('eventFormatId')) {
 					formatId = '#' + putAfterElement.data('eventFormatId');
 				}
