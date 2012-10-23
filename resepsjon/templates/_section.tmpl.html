@@ -1,5 +1,5 @@
 <script id="resepsjonSection" type="x-jquery-tmpl">
-  <section class="resepsjon" data-duration="10000">
+  <section class="resepsjon ${extraClasses}" data-duration="10000">
 
     <div class="photoCarousel">
       {{tmpl(promos) "#resepsjonPhotoElem"}}
@@ -16,6 +16,16 @@
       </li>
       {{/if}}
     </ul>
+  </section>
+</script>
+
+<script id="resepsjonSectionOnlyPromo" type="x-jquery-tmpl">
+  <section class="resepsjon ${extraClasses}" data-duration="10000">
+
+    <div class="photoCarousel">
+      {{tmpl(promos) "#resepsjonPhotoElem"}}
+    </div>
+
   </section>
 </script>
 
@@ -55,7 +65,9 @@
 <script id="resepsjonPhotoElem" type="x-jquery-tmpl">
 <div class="photoElem">
   <img src="" data-src="${src}" alt="${title}" />
-  <div class="title">${title}</div>
-  <div class="description">${description}</div>
+  <div class="expandingText">
+    <div class="title">${title}</div>
+    <div class="description">${description}</div>
+  </div>
 </div>
 </script>
