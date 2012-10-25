@@ -218,6 +218,9 @@
 {
   height: 415px;
   width: 100%;
+  /* Removes a 1 px line between the photoCarousel and the sheet stack */
+  /* Somehow the line only appears in chrome */
+  margin-bottom: -1px;
 }
 
 .s1280x720.vertical .resepsjon .photoCarousel .photoElem
@@ -228,7 +231,10 @@
 .s1280x720.vertical .resepsjon .photoCarousel .photoElem .title
 {
   min-height: 55px;
-  font-size: 52px;
+  font-size: 59px;
+  line-height: 55px;
+
+  padding-top: 7px;
 }
 
 .s1280x720.vertical .resepsjon .photoCarousel .photoElem .description
@@ -249,8 +255,11 @@
 
 .s1280x720.vertical .resepsjon .events .day > h1
 {
-  height: 80px;
+  /* Keep in mind that all elements have box-size: border-box */
+  /*min-height: 85px;*/
   font-size: 67px;
+  line-height: 70px;
+  padding-top: 8px; /* The 2 extra pixels account for the borders */
   padding-left: 32px;
 }
 
@@ -277,8 +286,16 @@
 
 .s1024x768 .resepsjon .photoCarousel .photoElem .title
 {
-  min-height: 75px;
-  font-size: 73px;
+  min-height: 65px;
+  font-size: 70px;
+  line-height: 65px;
+
+  /* This is a correction for the font so that it appears
+   * to be vertically aligned to the center */
+  padding-top: 5px;
+
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .s1024x768 .resepsjon .photoCarousel .photoElem .description
