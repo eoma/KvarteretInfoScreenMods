@@ -33,8 +33,7 @@
 }
 
 .resepsjon .photoCarousel .photoElem img,
-.resepsjon .photoCarousel .photoElem .title,
-.resepsjon .photoCarousel .photoElem .description
+.resepsjon .photoCarousel .photoElem .expandingText
 {
   position: absolute;
 }
@@ -70,10 +69,29 @@
   background-color: rgba(0, 0, 0, 0.85);
 }
 
+.resepsjon .photoCarousel .photoElem .expandingText,
 .resepsjon .photoCarousel .photoElem .title,
 .resepsjon .photoCarousel .photoElem .description
 {
   width: 100%;
+}
+
+.resepsjon .photoCarousel .photoElem .expandingText
+{
+  bottom: 0;
+}
+
+.resepsjon .photoCarousel .photoElem .title
+{
+  min-height: 56px;
+  font-size: 52px;
+}
+
+.resepsjon .photoCarousel .photoElem .description
+{
+  min-height: 40px;
+  font-size: 28px;
+  line-height: 1.6;
 }
 
 .resepsjon .events,
@@ -179,26 +197,20 @@
   color: #565656;
 }
 
-/*.jcarousel {
-    position: relative;
-    overflow: hidden;
+/** Some conditional css overrides **/
+
+.resepsjon.onlyPromo .photoCarousel,
+.resepsjon.onlyPromo .photoCarousel .photoElem {
+  height: 100%;
+  width: 100%;
 }
 
-.jcarousel > ul {
-    width: 20000em;
-    position: absolute;
-    list-style: none;
-    margin: 0;
-    padding: 0;
+.resepsjon.onlyPromo .sheetstack
+{
+  display: none;
 }
 
-.jcarousel > ul > li {
-    float: left;
-}
-
-.jcarousel[dir=rtl] > ul > li {
-    float: right;
-}*/
+/** Custom css for differing screen resolutions **/
 
 /**** Size: 1280x720 vertical ****/
 
@@ -206,6 +218,9 @@
 {
   height: 415px;
   width: 100%;
+  /* Removes a 1 px line between the photoCarousel and the sheet stack */
+  /* Somehow the line only appears in chrome */
+  margin-bottom: -1px;
 }
 
 .s1280x720.vertical .resepsjon .photoCarousel .photoElem
@@ -215,15 +230,16 @@
 
 .s1280x720.vertical .resepsjon .photoCarousel .photoElem .title
 {
-  bottom: 25px;
-  height: 55px;
-  font-size: 52px;
+  min-height: 55px;
+  font-size: 59px;
+  line-height: 55px;
+
+  padding-top: 7px;
 }
 
 .s1280x720.vertical .resepsjon .photoCarousel .photoElem .description
 {
-  bottom: 0px;
-  height: 25px;
+  min-height: 25px;
   font-size: 17px;
   line-height: 1.6;
 }
@@ -239,8 +255,11 @@
 
 .s1280x720.vertical .resepsjon .events .day > h1
 {
-  height: 80px;
+  /* Keep in mind that all elements have box-size: border-box */
+  /*min-height: 85px;*/
   font-size: 67px;
+  line-height: 70px;
+  padding-top: 8px; /* The 2 extra pixels account for the borders */
   padding-left: 32px;
 }
 
@@ -265,75 +284,28 @@
 
 /**** Size : 1024x768 ****/
 
-.s1024x768 .resepsjon .photoCarousel
-{
-  position: absolute;
-  left: 0;
-  height: 768px;
-  width: 632px;
-}
-
-.s1024x768 .resepsjon .photoCarousel .photoElem
-{
-  height: 768px;
-}
-
 .s1024x768 .resepsjon .photoCarousel .photoElem .title
 {
-  bottom: 65px;
-  height: 55px;
-  font-size: 52px;
+  min-height: 65px;
+  font-size: 70px;
+  line-height: 65px;
+
+  /* This is a correction for the font so that it appears
+   * to be vertically aligned to the center */
+  padding-top: 5px;
+
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .s1024x768 .resepsjon .photoCarousel .photoElem .description
 {
-  bottom: 40px;
-  height: 25px;
-  font-size: 17px;
+  min-height: 60px;
+  font-size: 43px;
   line-height: 1.6;
 }
 
-.s1024x768 .resepsjon .sheetstack {
-  position: absolute;
-  left: 632px;
-  top: 0;
-}
-
-.s1024x768 .resepsjon .sheetstack,
-.s1024x768 .resepsjon .sheetstack > li,
-.s1024x768 .resepsjon .events,
-.s1024x768 .resepsjon .events > ul
-{
-  height: 728px; /* 865 - 40 */
-  width: 392px;
-}
-
-.s1024x768 .resepsjon .events .day > h1
-{
-  height: 80px;
-  font-size: 67px;
-  padding-left: 32px;
-}
-
-.s1024x768 .resepsjon .events .day ul.collection > li
-{
-  width: 50%;
-  min-height: 110px;
-  padding-left: 32px;
-  padding-top: 16px;
-  padding-right: 8px;
-}
-
-.s1024x768 .resepsjon .events .day ul.collection > li .title
-{
-  font-size: 33px;
-}
-
-.s1024x768 .resepsjon .events .day ul.collection > li .subdata
-{
-  font-size: 18px;
-}
-
+/** Transition effects **/
 
 /* For modern browsers */
 .cf:before,

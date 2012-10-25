@@ -161,6 +161,20 @@ var resepsjon = {
 				// No promo
 			} else if (promoNum > 0) {
 				// No sheets
+
+				for (var i = 1; i < promoNum; i++) {
+					var time = i * t.duration.duration;
+
+					if (typeof t.duration.table[time] === 'undefined') {
+						t.duration.table[time] = [];
+					}
+					t.duration.table[time].push(t.id.promo);
+				}
+
+				t.duration.tableIndex = t.getKeys(t.duration.table);
+				t.duration.tableIndex.sort(function (a, b) {
+					return a - b;
+				});
 			} else {
 				// Nothing
 			}
@@ -241,6 +255,10 @@ var resepsjon = {
 		var t = this;
 
 		var elem = t.sheet.current;
+
+		if (typeof(t.sheet.current) == 'undefined' || t.sheet.current.length == 0) {
+			return;
+		}
 
 		console.log(elem.hasScrollBar(), elem.outerHeight(true) - elem.get(0).scrollHeight);
 

@@ -94,7 +94,8 @@ var resepsjonApp;
 			var sectionData = {
 				days : dateEvents,
 				promos : promoEvents,
-                helhus : helhus,
+				helhus : helhus,
+				extraClasses : "",
 			};
 
 			console.log("sectionData", sectionData);
@@ -102,6 +103,12 @@ var resepsjonApp;
 			if ((typeof putAfterElement !== 'undefined') && (putAfterElement !== null)) {
 				console.log("will insert elements!");
 				var formatId = '#resepsjonSection';
+
+				if (putAfterElement.hasClass("onlyPromo")) {
+					formatId = '#resepsjonSectionOnlyPromo';
+					sectionData.extraClasses += "onlyPromo";
+				}
+
 				if (putAfterElement.data('eventFormatId')) {
 					formatId = '#' + putAfterElement.data('eventFormatId');
 				}
@@ -155,9 +162,19 @@ var resepsjonApp;
 				var renderWhenAllIsDefined = function(index) {
 					if ((data.promos !== null) && (data.events !== null) && (data.helhus !== null)) {
 						console.log("will render all items for index " + index + "!");
-						t.render(data, (index === 0) ? true : false, elems.eq(index));
 
-						t.fixPromoPictures();
+						var hash = t.hashCode(JSON.stringify(data));
+						console.log(hash);
+
+						/*
+						 * We will onmy render the data if they have a different
+						 * hash code thab what is stored in the element
+						 */
+						if (elems.eq(index).data('hash') != hash) {
+							elems.eq(index).data('hash', hash);
+							t.render(data, (index === 0) ? true : false, elems.eq(index));
+							t.fixPromoPictures();
+						}
 
 						if ($.isFunction(callback)) {
 							callback();
@@ -293,6 +310,18 @@ var resepsjonApp;
 			             + encodeURI(elem.data('src')) + '&w=' + width + '&h=' + height;
 
 			elem.attr('src', timthumb);
+		},
+
+		/* Enables us to compute a crude hash of a string */
+		hashCode : function(str){
+			var hash = 0, i, char;
+			if (str.length == 0) return hash;
+			for (i = 0; i < str.length; i++) {
+				char = str.charCodeAt(i);
+				hash = ((hash<<5)-hash)+char;
+				hash = hash & hash; // Convert to 32bit integer
+			}
+			return hash;
 		}
 	};
 })(jQuery);
