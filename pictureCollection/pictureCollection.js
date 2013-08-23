@@ -85,8 +85,6 @@ var pictureCollection = {
 			image = null;
 		}
 
-		jQuery('.pictureCollection > img').load(resizeAndPadImage);
-
 		for (var i = 0; i < images.length; i++) {
 			var image = images.eq(i);
 
@@ -98,6 +96,8 @@ var pictureCollection = {
 			image = null;
 
 		}
+
+		jQuery('.pictureCollection > img').load(resizeAndPadImage);
 
 		images = null;
 	},
