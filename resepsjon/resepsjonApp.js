@@ -188,6 +188,11 @@ var resepsjonApp;
 					limit: 30
 				};
 
+				if (typeof elemData.dayspan === 'number') {
+					queryPromoParams.dayspan = elemData.dayspan;
+					queryParams.dayspan = elemData.dayspan;
+				}
+
 				var prepareHelhus = function (json, index) {
 					data.helhus = json;
 					renderWhenAllIsDefined(index);
