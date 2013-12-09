@@ -193,6 +193,10 @@ var resepsjonApp;
 					queryParams.dayspan = elemData.dayspan;
 				}
 
+				if (typeof elemData.promoCategoryId === 'string') {
+					queryPromoParams.category_id = elemData.promoCategoryId;
+				}
+
 				var prepareHelhus = function (json, index) {
 					data.helhus = json;
 					renderWhenAllIsDefined(index);
